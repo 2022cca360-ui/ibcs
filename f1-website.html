@@ -1,0 +1,1357 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FORMULA 1 — 속도의 예술</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600;700&family=Noto+Sans+KR:wght@300;400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --red: #E8002D;
+    --red-dark: #a50020;
+    --gold: #FFD700;
+    --silver: #C0C0C0;
+    --bronze: #CD7F32;
+    --bg: #050508;
+    --bg2: #0d0d14;
+    --bg3: #12121e;
+    --text: #f0f0f5;
+    --muted: #888899;
+    --border: #1e1e2e;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Noto Sans KR', 'Rajdhani', sans-serif;
+    overflow-x: hidden;
+  }
+
+  /* SCROLLBAR */
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--red); border-radius: 2px; }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 999;
+    background: rgba(5,5,8,0.92);
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid rgba(232,0,45,0.2);
+    padding: 0 40px;
+    display: flex; align-items: center; justify-content: space-between;
+    height: 64px;
+  }
+
+  .nav-logo {
+    font-family: 'Orbitron', monospace;
+    font-size: 22px; font-weight: 900;
+    color: var(--red);
+    letter-spacing: 3px;
+    text-decoration: none;
+  }
+
+  .nav-logo span { color: var(--text); }
+
+  .nav-links { display: flex; gap: 32px; list-style: none; }
+  .nav-links a {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 13px; font-weight: 600;
+    color: var(--muted);
+    text-decoration: none;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--red); }
+
+  /* HERO */
+  .hero {
+    height: 100vh;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    position: relative; overflow: hidden;
+    text-align: center;
+  }
+
+  .hero-bg {
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(ellipse 80% 60% at 50% 60%, rgba(232,0,45,0.12) 0%, transparent 70%),
+      radial-gradient(ellipse 50% 40% at 20% 80%, rgba(232,0,45,0.06) 0%, transparent 60%),
+      linear-gradient(180deg, #050508 0%, #0d0d14 50%, #050508 100%);
+  }
+
+  .speed-lines {
+    position: absolute; inset: 0; pointer-events: none;
+    overflow: hidden;
+  }
+
+  .speed-line {
+    position: absolute;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(232,0,45,0.4), transparent);
+    animation: speedLine 3s linear infinite;
+    opacity: 0;
+  }
+
+  @keyframes speedLine {
+    0% { transform: translateX(-100%); opacity: 0; }
+    10% { opacity: 1; }
+    90% { opacity: 1; }
+    100% { transform: translateX(200%); opacity: 0; }
+  }
+
+  .hero-eyebrow {
+    font-family: 'Orbitron', monospace;
+    font-size: 11px; letter-spacing: 6px;
+    color: var(--red);
+    text-transform: uppercase;
+    margin-bottom: 24px;
+    animation: fadeUp 0.8s ease 0.2s both;
+  }
+
+  .hero-title {
+    font-family: 'Orbitron', monospace;
+    font-size: clamp(52px, 10vw, 120px);
+    font-weight: 900;
+    line-height: 0.9;
+    letter-spacing: -2px;
+    margin-bottom: 16px;
+    animation: fadeUp 0.8s ease 0.4s both;
+  }
+
+  .hero-title .f1 { color: var(--red); display: block; }
+  .hero-title .sub {
+    display: block;
+    font-size: clamp(16px, 3vw, 32px);
+    color: var(--muted);
+    letter-spacing: 8px;
+    font-weight: 400;
+    margin-top: 8px;
+  }
+
+  .hero-desc {
+    max-width: 540px;
+    font-size: 16px; line-height: 1.8;
+    color: var(--muted);
+    margin: 24px auto 40px;
+    animation: fadeUp 0.8s ease 0.6s both;
+  }
+
+  .hero-stats {
+    display: flex; gap: 48px;
+    animation: fadeUp 0.8s ease 0.8s both;
+  }
+
+  .hero-stat { text-align: center; }
+  .hero-stat-num {
+    font-family: 'Orbitron', monospace;
+    font-size: 36px; font-weight: 900;
+    color: var(--red);
+    display: block;
+  }
+  .hero-stat-label { font-size: 11px; letter-spacing: 3px; color: var(--muted); text-transform: uppercase; }
+
+  .scroll-hint {
+    position: absolute; bottom: 32px;
+    left: 50%; transform: translateX(-50%);
+    display: flex; flex-direction: column; align-items: center; gap: 8px;
+    animation: fadeUp 1s ease 1.2s both;
+  }
+  .scroll-hint span { font-size: 10px; letter-spacing: 3px; color: var(--muted); text-transform: uppercase; }
+  .scroll-dot {
+    width: 1px; height: 40px;
+    background: linear-gradient(180deg, var(--red), transparent);
+    animation: scrollPulse 2s ease-in-out infinite;
+  }
+  @keyframes scrollPulse { 0%,100%{opacity:0.3} 50%{opacity:1} }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* SECTIONS */
+  section { padding: 100px 40px; max-width: 1200px; margin: 0 auto; }
+  .section-full { max-width: 100%; padding: 100px 0; }
+
+  .section-label {
+    font-family: 'Orbitron', monospace;
+    font-size: 10px; letter-spacing: 5px;
+    color: var(--red); text-transform: uppercase;
+    margin-bottom: 12px;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .section-label::before {
+    content: '';
+    display: block; width: 32px; height: 1px;
+    background: var(--red);
+  }
+
+  .section-title {
+    font-family: 'Orbitron', monospace;
+    font-size: clamp(28px, 4vw, 52px);
+    font-weight: 900;
+    line-height: 1.1;
+    margin-bottom: 16px;
+  }
+
+  .section-title em { color: var(--red); font-style: normal; }
+
+  .section-desc {
+    font-size: 16px; line-height: 1.9;
+    color: var(--muted);
+    max-width: 680px;
+    margin-bottom: 64px;
+  }
+
+  .divider {
+    width: 100%; height: 1px;
+    background: linear-gradient(90deg, transparent, var(--border), transparent);
+    margin: 0;
+  }
+
+  /* HISTORY TIMELINE */
+  .timeline { position: relative; padding-left: 40px; }
+  .timeline::before {
+    content: '';
+    position: absolute; left: 8px; top: 0; bottom: 0;
+    width: 1px; background: linear-gradient(180deg, var(--red), transparent);
+  }
+
+  .timeline-item {
+    position: relative; margin-bottom: 48px;
+    animation: fadeUp 0.6s ease both;
+  }
+
+  .timeline-dot {
+    position: absolute; left: -40px; top: 4px;
+    width: 16px; height: 16px;
+    border-radius: 50%;
+    border: 2px solid var(--red);
+    background: var(--bg);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .timeline-dot::after {
+    content: ''; width: 6px; height: 6px;
+    border-radius: 50%; background: var(--red);
+  }
+
+  .timeline-year {
+    font-family: 'Orbitron', monospace;
+    font-size: 12px; font-weight: 700;
+    color: var(--red); letter-spacing: 2px;
+    margin-bottom: 6px;
+  }
+
+  .timeline-event {
+    font-size: 18px; font-weight: 700;
+    margin-bottom: 8px;
+  }
+
+  .timeline-desc { font-size: 14px; line-height: 1.8; color: var(--muted); max-width: 600px; }
+
+  /* DRIVER CARDS */
+  .drivers-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 2px;
+  }
+
+  .driver-card {
+    background: var(--bg2);
+    padding: 40px;
+    position: relative; overflow: hidden;
+    cursor: pointer;
+    transition: all 0.3s;
+    border: 1px solid transparent;
+  }
+
+  .driver-card::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 2px;
+    background: var(--driver-color, var(--red));
+    transform: scaleX(0);
+    transition: transform 0.3s;
+    transform-origin: left;
+  }
+
+  .driver-card:hover { border-color: rgba(255,255,255,0.05); }
+  .driver-card:hover::before { transform: scaleX(1); }
+
+  .driver-card::after {
+    content: attr(data-number);
+    position: absolute; right: -10px; bottom: -20px;
+    font-family: 'Orbitron', monospace;
+    font-size: 100px; font-weight: 900;
+    color: rgba(255,255,255,0.02);
+    line-height: 1;
+    pointer-events: none;
+    transition: color 0.3s;
+  }
+  .driver-card:hover::after { color: rgba(255,255,255,0.04); }
+
+  .driver-flag { font-size: 28px; margin-bottom: 16px; }
+  .driver-name {
+    font-family: 'Orbitron', monospace;
+    font-size: 22px; font-weight: 900;
+    margin-bottom: 4px;
+    color: var(--text);
+  }
+  .driver-era { font-size: 12px; letter-spacing: 2px; color: var(--muted); text-transform: uppercase; margin-bottom: 20px; }
+
+  .driver-stats {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 12px; margin-bottom: 24px;
+  }
+
+  .dstat { text-align: center; }
+  .dstat-num {
+    font-family: 'Orbitron', monospace;
+    font-size: 22px; font-weight: 900;
+    color: var(--driver-color, var(--red));
+    display: block;
+  }
+  .dstat-label { font-size: 9px; letter-spacing: 2px; color: var(--muted); text-transform: uppercase; }
+
+  .driver-bio { font-size: 13px; line-height: 1.8; color: var(--muted); margin-bottom: 20px; }
+
+  .driver-achievements {
+    display: flex; flex-wrap: wrap; gap: 6px;
+  }
+  .badge {
+    font-size: 10px; letter-spacing: 1px;
+    padding: 4px 10px; border-radius: 2px;
+    border: 1px solid currentColor;
+    text-transform: uppercase;
+    font-family: 'Rajdhani', sans-serif; font-weight: 600;
+  }
+  .badge-gold { color: var(--gold); border-color: rgba(255,215,0,0.3); background: rgba(255,215,0,0.05); }
+  .badge-red { color: var(--red); border-color: rgba(232,0,45,0.3); background: rgba(232,0,45,0.05); }
+  .badge-silver { color: var(--silver); border-color: rgba(192,192,192,0.3); background: rgba(192,192,192,0.05); }
+
+  /* ALL TIME RANKINGS */
+  .rankings-table { width: 100%; border-collapse: collapse; }
+
+  .rankings-table th {
+    font-family: 'Orbitron', monospace;
+    font-size: 9px; letter-spacing: 3px;
+    color: var(--muted); text-transform: uppercase;
+    padding: 12px 16px; text-align: left;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .rankings-table tr { transition: background 0.2s; }
+  .rankings-table tbody tr:hover { background: rgba(255,255,255,0.02); }
+
+  .rankings-table td {
+    padding: 14px 16px;
+    border-bottom: 1px solid rgba(255,255,255,0.03);
+    font-size: 14px;
+  }
+
+  .rank-num {
+    font-family: 'Orbitron', monospace;
+    font-weight: 900; font-size: 16px;
+    width: 48px;
+  }
+
+  .rank-1 { color: var(--gold); }
+  .rank-2 { color: var(--silver); }
+  .rank-3 { color: var(--bronze); }
+  .rank-other { color: var(--muted); }
+
+  .rank-name { font-weight: 700; font-size: 15px; }
+  .rank-flag { margin-right: 8px; }
+  .rank-bar-wrap { width: 120px; }
+  .rank-bar {
+    height: 3px; border-radius: 99px;
+    background: var(--red);
+    transition: width 1s ease;
+  }
+
+  /* RULES SECTION */
+  .rules-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+  }
+
+  .rule-card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    padding: 28px;
+    border-radius: 2px;
+    position: relative; overflow: hidden;
+    transition: border-color 0.3s;
+  }
+  .rule-card:hover { border-color: rgba(232,0,45,0.3); }
+
+  .rule-icon { font-size: 32px; margin-bottom: 16px; }
+  .rule-title { font-family: 'Rajdhani', sans-serif; font-size: 18px; font-weight: 700; margin-bottom: 10px; }
+  .rule-desc { font-size: 13px; line-height: 1.8; color: var(--muted); }
+
+  /* TECH SECTION */
+  .tech-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; }
+
+  .tech-item {
+    background: var(--bg2);
+    padding: 40px;
+    border: 1px solid transparent;
+    transition: border-color 0.3s;
+  }
+  .tech-item:hover { border-color: rgba(232,0,45,0.15); }
+  .tech-num {
+    font-family: 'Orbitron', monospace;
+    font-size: 48px; font-weight: 900;
+    color: rgba(232,0,45,0.15);
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+  .tech-name { font-family: 'Rajdhani', sans-serif; font-size: 20px; font-weight: 700; margin-bottom: 12px; color: var(--red); }
+  .tech-desc { font-size: 13px; line-height: 1.9; color: var(--muted); }
+
+  /* CARS SECTION */
+  .car-specs {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+  }
+  .spec-box {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    padding: 24px;
+    text-align: center;
+  }
+  .spec-value {
+    font-family: 'Orbitron', monospace;
+    font-size: 36px; font-weight: 900;
+    color: var(--red); display: block;
+    margin-bottom: 4px;
+  }
+  .spec-unit { font-size: 13px; color: var(--muted); }
+  .spec-name { font-size: 11px; letter-spacing: 2px; color: var(--muted); text-transform: uppercase; margin-top: 8px; }
+
+  /* FOOTER */
+  footer {
+    text-align: center;
+    padding: 60px 40px;
+    background: var(--bg2);
+    border-top: 1px solid var(--border);
+  }
+  .footer-logo {
+    font-family: 'Orbitron', monospace;
+    font-size: 28px; font-weight: 900;
+    color: var(--red); letter-spacing: 4px;
+    margin-bottom: 16px;
+  }
+  footer p { font-size: 13px; color: var(--muted); line-height: 1.8; }
+
+  /* ACTIVE NAV */
+  .flag-container {
+    display: flex; gap: 4px; flex-wrap: wrap;
+    margin-bottom: 40px;
+  }
+  .flag-strip { width: 3px; height: 20px; border-radius: 1px; }
+
+  /* TABS */
+  .tabs { display: flex; gap: 0; margin-bottom: 40px; }
+  .tab {
+    padding: 12px 24px;
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    cursor: pointer;
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 13px; font-weight: 600;
+    letter-spacing: 2px; text-transform: uppercase;
+    transition: all 0.2s;
+    margin-right: -1px;
+  }
+  .tab.active {
+    background: var(--red);
+    border-color: var(--red);
+    color: white;
+  }
+  .tab:hover:not(.active) { color: var(--text); border-color: rgba(255,255,255,0.2); }
+
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
+
+  /* CIRCUIT INFO */
+  .circuit-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; }
+  .circuit-card {
+    background: var(--bg2); border: 1px solid var(--border); padding: 24px;
+    transition: border-color 0.3s;
+  }
+  .circuit-card:hover { border-color: rgba(232,0,45,0.3); }
+  .circuit-name { font-family: 'Rajdhani', sans-serif; font-size: 18px; font-weight: 700; margin-bottom: 4px; }
+  .circuit-country { font-size: 12px; color: var(--muted); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 12px; }
+  .circuit-info { font-size: 13px; color: var(--muted); line-height: 1.7; }
+
+  /* RESPONSIVE */
+  @media(max-width: 768px) {
+    nav { padding: 0 20px; }
+    .nav-links { display: none; }
+    section { padding: 60px 20px; }
+    .hero-stats { gap: 24px; }
+    .tech-grid { grid-template-columns: 1fr; }
+    .driver-stats { grid-template-columns: repeat(3, 1fr); }
+    .rankings-table { font-size: 12px; }
+    .rank-bar-wrap { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#hero" class="nav-logo">F<span>1</span></a>
+  <ul class="nav-links">
+    <li><a href="#history">역사</a></li>
+    <li><a href="#legends">전설들</a></li>
+    <li><a href="#rankings">역대 순위</a></li>
+    <li><a href="#rules">규칙 & 기술</a></li>
+    <li><a href="#cars">머신</a></li>
+    <li><a href="#circuits">서킷</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="hero" style="max-width:100%; padding:0;">
+  <div class="hero-bg"></div>
+  <div class="speed-lines" id="speedLines"></div>
+
+  <div style="position:relative; z-index:1;">
+    <div class="hero-eyebrow">Since 1950 · The Pinnacle of Motorsport</div>
+    <h1 class="hero-title">
+      <span class="f1">FORMULA 1</span>
+      <span class="sub">속도의 예술</span>
+    </h1>
+    <p class="hero-desc">
+      인류가 만든 가장 빠른 레이싱 머신과 세계 최고의 드라이버들이 펼치는<br>
+      극한의 기술, 전략, 그리고 용기의 스포츠
+    </p>
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <span class="hero-stat-num">300+</span>
+        <span class="hero-stat-label">km/h 최고 속도</span>
+      </div>
+      <div class="hero-stat">
+        <span class="hero-stat-num">74</span>
+        <span class="hero-stat-label">년의 역사</span>
+      </div>
+      <div class="hero-stat">
+        <span class="hero-stat-num">24</span>
+        <span class="hero-stat-label">2024 레이스</span>
+      </div>
+      <div class="hero-stat">
+        <span class="hero-stat-num">1.5B</span>
+        <span class="hero-stat-label">글로벌 팬</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="scroll-hint">
+    <span>Scroll</span>
+    <div class="scroll-dot"></div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- HISTORY -->
+<section id="history" style="max-width:1200px; margin:0 auto; padding:100px 40px;">
+  <div class="section-label">History</div>
+  <h2 class="section-title">F1의 <em>74년</em> 역사</h2>
+  <p class="section-desc">
+    1950년 영국 실버스톤에서 시작된 포뮬러 원은 기술 혁신과 드라마틱한 스토리로 가득 찬 스포츠입니다. 수십 년에 걸쳐 수많은 영웅과 전설이 탄생했습니다.
+  </p>
+
+  <div class="timeline">
+    <div class="timeline-item">
+      <div class="timeline-dot"></div>
+      <div class="timeline-year">1950</div>
+      <div class="timeline-event">포뮬러 원의 탄생</div>
+      <div class="timeline-desc">1950년 5월 13일, 영국 실버스톤 서킷에서 첫 번째 F1 월드 챔피언십이 열렸습니다. 이탈리아의 주세페 파리나(Nino Farina)가 최초의 F1 세계 챔피언이 되었으며, 알파 로메오 팀이 강세를 보였습니다. 당시 자동차는 날개 없이 공기역학을 전혀 고려하지 않았으며, 드라이버들은 가죽 헬멧만 쓰고 출전했습니다.</div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-dot"></div>
+      <div class="timeline-year">1950년대</div>
+      <div class="timeline-event">파나지오 판지오의 시대</div>
+      <div class="timeline-desc">아르헨티나의 후안 마누엘 판지오(Juan Manuel Fangio)가 1951~1957년 사이에 5번의 챔피언십을 획득하며 전설이 되었습니다. 알파 로메오, 메르세데스, 페라리, 마세라티 등 여러 팀을 옮기며 우승한 그의 기록은 반세기 넘게 깨지지 않았습니다. 이 시대의 F1은 진짜 "죽음의 스포츠"로, 시즌마다 여러 드라이버가 사망했습니다.</div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-dot"></div>
+      <div class="timeline-year">1960년대</div>
+      <div class="timeline-event">영국의 부상과 기술 혁명</div>
+      <div class="timeline-desc">쿠퍼, 로터스, 브라밤 등 영국 팀들이 중앙 탑재 엔진(Mid-engine) 방식을 도입하며 기술 혁명이 일어났습니다. 짐 클라크(Jim Clark), 존 서티스(John Surtees), 잭 브라밤(Jack Brabham) 등이 챔피언이 되었습니다. 1968년 로터스가 최초로 스폰서 리버리(Gold Leaf 담배 스폰서)를 도입하며 F1의 상업화가 시작되었습니다.</div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-dot"></div>
+      <div class="timeline-year">1970년대</div>
+      <div class="timeline-event">공기역학의 시대 & 안전 혁명</div>
+      <div class="timeline-desc">다운포스를 이용한 윙카(Wing Car) 기술이 등장하며 속도가 비약적으로 빨라졌습니다. 니키 라우다(Niki Lauda)가 1976년 독일 GP에서 끔찍한 화재 사고로 거의 사망할 뻔했지만 6주 만에 복귀한 불굴의 드라마가 탄생했습니다. 자키 이크스, 에머슨 피티팔디, 마리오 안드레티 등이 활약했으며, 이 시기 안전 기준이 대폭 강화되었습니다.</div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-dot"></div>
+      <div class="timeline-year">1980년대</div>
+      <div class="timeline-event">터보 시대와 맥라렌의 지배</div>
+      <div class="timeline-desc">터보차저 엔진이 1,500마력 이상을 뿜어내며 F1 역사상 가장 빠른 시대가 열렸습니다. 알랭 프로스트(Alain Prost)와 아일톤 세나(Ayrton Senna)가 맥라렌에서 함께, 그리고 치열하게 경쟁하며 역사상 가장 위대한 라이벌 관계가 형성되었습니다. 나이젤 만셀(Nigel Mansell), 넬슨 피케(Nelson Piquet)도 이 시대를 빛냈습니다.</div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-dot"></div>
+      <div class="timeline-year">1994</div>
+      <div class="timeline-event">최악의 비극 — 세나의 죽음</div>
+      <div class="timeline-desc">1994년 5월 1일, 산마리노 GP에서 아일톤 세나가 사고로 사망했습니다. F1 역사상 가장 충격적인 사건 중 하나로, 이 사고를 계기로 FIA는 대대적인 안전 개혁을 시행했습니다. 같은 주말 롤란트 라첸베르거도 사망하며 F1 역사에서 가장 암울한 주말로 기록됩니다.</div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-dot"></div>
+      <div class="timeline-year">1994–2004</div>
+      <div class="timeline-event">슈마허와 페라리의 전설</div>
+      <div class="timeline-desc">미하엘 슈마허(Michael Schumacher)가 1994~95년 베네통에서 2회, 2000~2004년 페라리에서 5연속 챔피언을 차지하며 총 7회 세계 챔피언이 되었습니다. 특히 2004년 시즌은 18번의 레이스 중 13승을 거두는 압도적인 지배력을 보여주었습니다. 그는 은퇴 후에도 F1의 모든 기록을 갈아치운 역사상 최고의 드라이버 중 한 명으로 평가받습니다.</div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-dot"></div>
+      <div class="timeline-year">2008–2020</div>
+      <div class="timeline-event">해밀턴의 시대</div>
+      <div class="timeline-desc">루이스 해밀턴(Lewis Hamilton)이 2008년 맥라렌으로 첫 챔피언을 차지한 후, 2014년 메르세데스 이적과 함께 하이브리드 시대를 지배했습니다. 2020년 7번째 챔피언십으로 슈마허의 기록을 타이(동률)했으며, 통산 103승이라는 최다 우승 기록도 보유하고 있습니다.</div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-dot"></div>
+      <div class="timeline-year">2021–현재</div>
+      <div class="timeline-event">베르스타펜의 지배와 새로운 시대</div>
+      <div class="timeline-desc">막스 베르스타펜(Max Verstappen)이 2021년 극적인 최종전 역전으로 첫 챔피언을 차지한 후, 2022년부터 레드불과 함께 압도적인 지배력을 보이며 2022~2024년 3연속 챔피언이 되었습니다. Netflix 다큐멘터리 'Drive to Survive'가 전 세계적으로 새로운 팬층을 만들며 F1의 인기가 폭발적으로 증가했습니다.</div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- LEGENDS -->
+<section id="legends" style="max-width:1200px; margin:0 auto; padding:100px 40px;">
+  <div class="section-label">Legends</div>
+  <h2 class="section-title">F1의 <em>전설들</em></h2>
+  <p class="section-desc">역사를 바꾼 위대한 드라이버들. 단순한 속도를 넘어 용기, 기술, 카리스마로 수억 명의 팬을 사로잡은 레이싱의 신들입니다.</p>
+
+  <div class="drivers-grid">
+
+    <!-- VERSTAPPEN -->
+    <div class="driver-card" style="--driver-color: #3671C6;" data-number="33">
+      <div class="driver-flag">🇳🇱</div>
+      <div class="driver-name">MAX VERSTAPPEN</div>
+      <div class="driver-era">2015 – 현재 · 레드불 레이싱</div>
+      <div class="driver-stats">
+        <div class="dstat">
+          <span class="dstat-num" style="color:#3671C6;">4</span>
+          <span class="dstat-label">챔피언십</span>
+        </div>
+        <div class="dstat">
+          <span class="dstat-num" style="color:#3671C6;">62+</span>
+          <span class="dstat-label">우승</span>
+        </div>
+        <div class="dstat">
+          <span class="dstat-num" style="color:#3671C6;">110+</span>
+          <span class="dstat-label">포디움</span>
+        </div>
+      </div>
+      <div class="driver-bio">
+        네덜란드 출신의 막스 베르스타펜은 17세에 F1 역사상 최연소 드라이버로 데뷔(2015)했습니다. 2021년 아부다비 최종전에서 루이스 해밀턴을 마지막 랩에서 추월하는 극적인 역전으로 첫 챔피언을 차지했고, 이후 2022년과 2023년에는 압도적인 지배력으로 2연속 챔피언을 달성했습니다.
+        <br><br>
+        2023년 시즌에는 22번의 레이스 중 19승을 차지하는 역대급 퍼포먼스를 보여줬습니다. 공격적이고 두려움 없는 레이싱 스타일로 "Super Max"라는 별명을 얻었으며, 웨트 컨디션에서 특히 탁월한 기량을 발휘합니다. 아버지 요스 베르스타펜도 F1 드라이버였으며, 어린 시절부터 카트로 훈련받아 타고난 레이서입니다.
+      </div>
+      <div class="driver-achievements">
+        <span class="badge badge-gold">🏆 4회 챔피언</span>
+        <span class="badge badge-red">🚀 최연소 데뷔</span>
+        <span class="badge badge-gold">⚡ 2023 역대급 시즌</span>
+        <span class="badge badge-silver">🌧️ 빗속의 마법사</span>
+      </div>
+    </div>
+
+    <!-- HAMILTON -->
+    <div class="driver-card" style="--driver-color: #00D2BE;" data-number="44">
+      <div class="driver-flag">🇬🇧</div>
+      <div class="driver-name">LEWIS HAMILTON</div>
+      <div class="driver-era">2007 – 현재 · 페라리 (전 메르세데스)</div>
+      <div class="driver-stats">
+        <div class="dstat">
+          <span class="dstat-num" style="color:#00D2BE;">7</span>
+          <span class="dstat-label">챔피언십</span>
+        </div>
+        <div class="dstat">
+          <span class="dstat-num" style="color:#00D2BE;">103</span>
+          <span class="dstat-label">우승 (최다)</span>
+        </div>
+        <div class="dstat">
+          <span class="dstat-num" style="color:#00D2BE;">197</span>
+          <span class="dstat-label">포디움</span>
+        </div>
+      </div>
+      <div class="driver-bio">
+        영국 서레이 출신의 루이스 해밀턴은 역사상 가장 위대한 F1 드라이버 중 한 명입니다. 2007년 맥라렌으로 데뷔하자마자 챔피언 직전까지 갔으며, 2008년 브라질 최종전 마지막 코너에서 오버테이크로 극적인 첫 챔피언을 차지했습니다.
+        <br><br>
+        2014년 메르세데스 이적 후 하이브리드 시대를 완벽하게 지배하며 2014~15, 2017~18, 2019~20년 챔피언을 달성했습니다. 103승, 197 포디움, 104 폴 포지션이라는 전무후무한 기록을 보유하고 있습니다. 흑인 드라이버 최초로 인종 다양성에 대한 메시지를 적극적으로 전달하며 사회적 영향력도 큰 인물입니다. 2025년 페라리로 이적했습니다.
+      </div>
+      <div class="driver-achievements">
+        <span class="badge badge-gold">🏆 7회 챔피언 (최다 타이)</span>
+        <span class="badge badge-gold">🥇 103승 (역대 최다)</span>
+        <span class="badge badge-red">💜 포디움 197회</span>
+        <span class="badge badge-silver">🌍 다양성 아이콘</span>
+      </div>
+    </div>
+
+    <!-- SCHUMACHER -->
+    <div class="driver-card" style="--driver-color: #DC0000;" data-number="1">
+      <div class="driver-flag">🇩🇪</div>
+      <div class="driver-name">MICHAEL SCHUMACHER</div>
+      <div class="driver-era">1991 – 2012 · 페라리 / 메르세데스 / 베네통</div>
+      <div class="driver-stats">
+        <div class="dstat">
+          <span class="dstat-num" style="color:#DC0000;">7</span>
+          <span class="dstat-label">챔피언십</span>
+        </div>
+        <div class="dstat">
+          <span class="dstat-num" style="color:#DC0000;">91</span>
+          <span class="dstat-label">우승</span>
+        </div>
+        <div class="dstat">
+          <span class="dstat-num" style="color:#DC0000;">155</span>
+          <span class="dstat-label">포디움</span>
+        </div>
+      </div>
+      <div class="driver-bio">
+        독일의 미하엘 슈마허는 F1 역사상 가장 완벽한 드라이버로 평가받습니다. 1994년과 1995년 베네통에서 첫 두 번의 챔피언십을 차지한 후, 1999년부터 페라리와 함께 역사적인 파트너십을 시작했습니다.
+        <br><br>
+        2000년부터 2004년까지 페라리와 함께 5연속 챔피언십을 달성하며 역사를 썼습니다. 특히 2002년 시즌에는 개최된 모든 레이스에서 포디움에 오르는 경이로운 기록을 남겼습니다. 탁월한 피트스톱 전략 활용, 빗속 레이싱, 타이어 관리 능력으로 "The Red Baron"이라 불렸습니다. 2013년 스키 사고로 심각한 부상을 입었으나 가족들이 현재 상태를 비공개로 유지하고 있습니다.
+      </div>
+      <div class="driver-achievements">
+        <span class="badge badge-gold">🏆 7회 챔피언 (최다 타이)</span>
+        <span class="badge badge-gold">⚡ 5연속 챔피언 (2000-04)</span>
+        <span class="badge badge-red">🔴 페라리의 영웅</span>
+        <span class="badge badge-silver">📊 기록의 사나이</span>
+      </div>
+    </div>
+
+    <!-- SENNA -->
+    <div class="driver-card" style="--driver-color: #00A651;" data-number="12">
+      <div class="driver-flag">🇧🇷</div>
+      <div class="driver-name">AYRTON SENNA</div>
+      <div class="driver-era">1984 – 1994 · 맥라렌 / 윌리엄스</div>
+      <div class="driver-stats">
+        <div class="dstat">
+          <span class="dstat-num" style="color:#00A651;">3</span>
+          <span class="dstat-label">챔피언십</span>
+        </div>
+        <div class="dstat">
+          <span class="dstat-num" style="color:#00A651;">41</span>
+          <span class="dstat-label">우승</span>
+        </div>
+        <div class="dstat">
+          <span class="dstat-num" style="color:#00A651;">80</span>
+          <span class="dstat-label">폴 포지션</span>
+        </div>
+      </div>
+      <div class="driver-bio">
+        브라질의 아일톤 세나는 단순한 레이서를 넘어 하나의 문화적 현상이었습니다. 빗속에서의 마법 같은 랩타임, 한계를 초월한 집중력, 그리고 브라질 국민의 영웅으로서 그는 F1 역사상 가장 많은 사랑을 받는 드라이버입니다.
+        <br><br>
+        1988년 맥라렌에서 알랭 프로스트와 함께 레이스 중 16승을 나눠가지며 역사상 가장 치열한 팀 내 라이벌 관계를 만들었습니다. 빗속 레이싱에서 현대 컴퓨터로도 설명할 수 없는 퍼포먼스를 보여줬으며, 그는 "나는 신이 내 손을 이끌고 있다고 느꼈다"고 표현했습니다. 1994년 5월 1일 이몰라에서의 사망은 F1과 브라질 전체를 충격에 빠뜨렸습니다.
+      </div>
+      <div class="driver-achievements">
+        <span class="badge badge-gold">🏆 3회 챔피언</span>
+        <span class="badge badge-gold">🌧️ 빗속의 신</span>
+        <span class="badge badge-red">💛 영원한 전설</span>
+        <span class="badge badge-silver">🇧🇷 브라질의 영웅</span>
+      </div>
+    </div>
+
+    <!-- PROST -->
+    <div class="driver-card" style="--driver-color: #E8002D;" data-number="2">
+      <div class="driver-flag">🇫🇷</div>
+      <div class="driver-name">ALAIN PROST</div>
+      <div class="driver-era">1980 – 1993 · 맥라렌 / 페라리 / 윌리엄스</div>
+      <div class="driver-stats">
+        <div class="dstat">
+          <span class="dstat-num" style="color:#E8002D;">4</span>
+          <span class="dstat-label">챔피언십</span>
+        </div>
+        <div class="dstat">
+          <span class="dstat-num" style="color:#E8002D;">51</span>
+          <span class="dstat-label">우승</span>
+        </div>
+        <div class="dstat">
+          <span class="dstat-num" style="color:#E8002D;">106</span>
+          <span class="dstat-label">포디움</span>
+        </div>
+      </div>
+      <div class="driver-bio">
+        "교수(The Professor)"라는 별명을 가진 프랑스의 알랭 프로스트는 순수한 속도보다 지능과 전략으로 레이스를 지배한 드라이버입니다. 불필요한 위험을 피하면서도 결코 챔피언십을 놓치지 않는 철저한 계산 위에 세워진 레이싱 스타일을 구사했습니다.
+        <br><br>
+        세나와의 라이벌 관계는 F1 역사상 가장 유명한 라이벌 관계로, 1989년 일본 GP 충돌 사건은 지금도 회자됩니다. 1993년 윌리엄스에서 4번째 챔피언을 차지한 후 은퇴했으며, 통산 106 포디움으로 당시 F1 역사상 가장 많은 포디움 기록을 보유했습니다.
+      </div>
+      <div class="driver-achievements">
+        <span class="badge badge-gold">🏆 4회 챔피언</span>
+        <span class="badge badge-silver">🎓 교수 (The Professor)</span>
+        <span class="badge badge-red">⚔️ 세나의 라이벌</span>
+        <span class="badge badge-silver">🧠 전략의 달인</span>
+      </div>
+    </div>
+
+    <!-- FANGIO -->
+    <div class="driver-card" style="--driver-color: #9B59B6;" data-number="1">
+      <div class="driver-flag">🇦🇷</div>
+      <div class="driver-name">JUAN MANUEL FANGIO</div>
+      <div class="driver-era">1950 – 1958 · 알파로메오 / 메르세데스 / 페라리</div>
+      <div class="driver-stats">
+        <div class="dstat">
+          <span class="dstat-num" style="color:#9B59B6;">5</span>
+          <span class="dstat-label">챔피언십</span>
+        </div>
+        <div class="dstat">
+          <span class="dstat-num" style="color:#9B59B6;">24</span>
+          <span class="dstat-label">우승</span>
+        </div>
+        <div class="dstat">
+          <span class="dstat-num" style="color:#9B59B6;">48</span>
+          <span class="dstat-label">레이스 출전</span>
+        </div>
+      </div>
+      <div class="driver-bio">
+        아르헨티나의 후안 마누엘 판지오는 F1 최초의 진정한 레전드입니다. 단 48번의 레이스 출전으로 5번의 세계 챔피언을 달성했으며, 참가한 레이스의 절반 이상을 우승하는 믿을 수 없는 승률을 자랑합니다.
+        <br><br>
+        4개의 서로 다른 팀(알파 로메오, 마세라티, 메르세데스, 페라리)에서 챔피언을 달성한 유일한 드라이버이며, 이는 그의 순수한 드라이빙 재능을 증명합니다. 그의 기록은 46년간 누구도 깨지 못했으며, 많은 F1 역사가들이 그를 "역대 가장 완전한 드라이버"로 평가합니다.
+      </div>
+      <div class="driver-achievements">
+        <span class="badge badge-gold">🏆 5회 챔피언</span>
+        <span class="badge badge-gold">📊 승률 46%</span>
+        <span class="badge badge-silver">🏛️ F1의 창시자</span>
+        <span class="badge badge-silver">🚗 4팀 챔피언</span>
+      </div>
+    </div>
+
+    <!-- LAUDA -->
+    <div class="driver-card" style="--driver-color: #FF8700;" data-number="1">
+      <div class="driver-flag">🇦🇹</div>
+      <div class="driver-name">NIKI LAUDA</div>
+      <div class="driver-era">1971 – 1985 · 페라리 / 맥라렌</div>
+      <div class="driver-stats">
+        <div class="dstat">
+          <span class="dstat-num" style="color:#FF8700;">3</span>
+          <span class="dstat-label">챔피언십</span>
+        </div>
+        <div class="dstat">
+          <span class="dstat-num" style="color:#FF8700;">25</span>
+          <span class="dstat-label">우승</span>
+        </div>
+        <div class="dstat">
+          <span class="dstat-num" style="color:#FF8700;">54</span>
+          <span class="dstat-label">포디움</span>
+        </div>
+      </div>
+      <div class="driver-bio">
+        오스트리아의 니키 라우다는 역사상 가장 불굴의 의지를 보여준 드라이버입니다. 1976년 독일 뉘르부르크링에서 대형 화재 사고로 심각한 화상을 입었지만, 불과 6주 만에 복귀하여 그해 챔피언십 레이스를 이어갔습니다.
+        <br><br>
+        제임스 헌트(James Hunt)와의 1976년 챔피언십 다툼은 영화 'Rush'(2013)로 제작될 만큼 극적이었습니다. 1977년과 1984년 두 번의 추가 챔피언십을 달성했으며, 은퇴 후에는 팀 매니저로서도 탁월한 능력을 발휘해 루이스 해밀턴을 메르세데스로 영입하는 핵심 역할을 했습니다.
+      </div>
+      <div class="driver-achievements">
+        <span class="badge badge-gold">🏆 3회 챔피언</span>
+        <span class="badge badge-red">🔥 불굴의 아이콘</span>
+        <span class="badge badge-silver">🎬 Rush 주인공</span>
+        <span class="badge badge-silver">✈️ 항공사 사업가</span>
+      </div>
+    </div>
+
+    <!-- VETTEL -->
+    <div class="driver-card" style="--driver-color: #1E3A5F;" data-number="5">
+      <div class="driver-flag">🇩🇪</div>
+      <div class="driver-name">SEBASTIAN VETTEL</div>
+      <div class="driver-era">2007 – 2022 · 레드불 / 페라리</div>
+      <div class="driver-stats">
+        <div class="dstat">
+          <span class="dstat-num" style="color:#3671C6;">4</span>
+          <span class="dstat-label">챔피언십</span>
+        </div>
+        <div class="dstat">
+          <span class="dstat-num" style="color:#3671C6;">53</span>
+          <span class="dstat-label">우승</span>
+        </div>
+        <div class="dstat">
+          <span class="dstat-num" style="color:#3671C6;">122</span>
+          <span class="dstat-label">포디움</span>
+        </div>
+      </div>
+      <div class="driver-bio">
+        독일의 세바스티안 베텔은 2010년 F1 최연소 챔피언(당시) 기록을 세우며 등장해, 레드불과 함께 2010~2013년 4연속 챔피언십을 달성했습니다. 2013년에는 9연속 우승이라는 경이로운 기록을 세웠습니다.
+        <br><br>
+        레이스카에 여성 이름을 붙이는 독특한 습관과 유머러스한 성격으로 팬들에게 많은 사랑을 받았습니다. 2022년 환경 문제에 대한 신념으로 은퇴를 선언했으며, 은퇴 후 환경 운동가로서 활발한 활동을 펼치고 있습니다.
+      </div>
+      <div class="driver-achievements">
+        <span class="badge badge-gold">🏆 4회 챔피언</span>
+        <span class="badge badge-red">⚡ 9연속 우승</span>
+        <span class="badge badge-silver">🌱 환경 운동가</span>
+        <span class="badge badge-silver">😄 레드불의 왕</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ALL TIME RANKINGS -->
+<section id="rankings" style="max-width:1200px; margin:0 auto; padding:100px 40px;">
+  <div class="section-label">All Time</div>
+  <h2 class="section-title">역대 챔피언 <em>우승 순위</em></h2>
+  <p class="section-desc">F1 월드 챔피언십 우승 횟수 기준 역대 최고의 드라이버들. 74년의 역사 속에서 단 34명만이 세계 챔피언의 영예를 안았습니다.</p>
+
+  <div class="tabs">
+    <button class="tab active" onclick="showTab('championships')">챔피언십 횟수</button>
+    <button class="tab" onclick="showTab('wins')">우승 횟수</button>
+    <button class="tab" onclick="showTab('podiums')">포디움 횟수</button>
+  </div>
+
+  <div id="championships" class="tab-content active">
+    <table class="rankings-table">
+      <thead>
+        <tr>
+          <th>순위</th>
+          <th>드라이버</th>
+          <th>국적</th>
+          <th>챔피언십</th>
+          <th>활동 기간</th>
+          <th style="width:140px;">상대 비율</th>
+        </tr>
+      </thead>
+      <tbody id="champ-tbody"></tbody>
+    </table>
+  </div>
+
+  <div id="wins" class="tab-content">
+    <table class="rankings-table">
+      <thead>
+        <tr>
+          <th>순위</th>
+          <th>드라이버</th>
+          <th>국적</th>
+          <th>우승</th>
+          <th>활동 기간</th>
+          <th style="width:140px;">상대 비율</th>
+        </tr>
+      </thead>
+      <tbody id="wins-tbody"></tbody>
+    </table>
+  </div>
+
+  <div id="podiums" class="tab-content">
+    <table class="rankings-table">
+      <thead>
+        <tr>
+          <th>순위</th>
+          <th>드라이버</th>
+          <th>국적</th>
+          <th>포디움</th>
+          <th>활동 기간</th>
+          <th style="width:140px;">상대 비율</th>
+        </tr>
+      </thead>
+      <tbody id="podiums-tbody"></tbody>
+    </table>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- RULES & TECH -->
+<section id="rules" style="max-width:1200px; margin:0 auto; padding:100px 40px;">
+  <div class="section-label">Rules & Technology</div>
+  <h2 class="section-title">F1의 <em>규칙과 기술</em></h2>
+  <p class="section-desc">복잡해 보이지만 알면 알수록 재미있는 F1의 규칙과 첨단 기술들. 이것만 알면 당신도 F1 전문가!</p>
+
+  <h3 style="font-family:'Rajdhani',sans-serif; font-size:22px; font-weight:700; margin-bottom:24px; color:var(--red);">📋 기본 규칙</h3>
+  <div class="rules-grid" style="margin-bottom:60px;">
+    <div class="rule-card">
+      <div class="rule-icon">🏁</div>
+      <div class="rule-title">포인트 시스템</div>
+      <div class="rule-desc">1위부터 10위까지 포인트가 주어집니다 (25-18-15-12-10-8-6-4-2-1). 추가로 가장 빠른 랩을 기록한 드라이버에게 1포인트가 주어집니다. 시즌 종료 시 총 포인트가 가장 많은 드라이버가 챔피언이 됩니다.</div>
+    </div>
+    <div class="rule-card">
+      <div class="rule-icon">🔧</div>
+      <div class="rule-title">파크 페르메 규칙</div>
+      <div class="rule-desc">예선 종료 후 레이스 시작 전까지 차량을 크게 수정하는 것이 금지됩니다. 이 규정을 어기면 피트 레인에서 출발해야 합니다. 긴급한 안전 문제만 수정 가능합니다.</div>
+    </div>
+    <div class="rule-card">
+      <div class="rule-icon">⛽</div>
+      <div class="rule-title">연료 규정</div>
+      <div class="rule-desc">레이스 당 사용 가능한 연료량이 제한되어 있습니다 (110kg). 드라이버들은 연료를 아끼기 위해 "Lift and Coast(엑셀에서 발을 떼고 브레이크 없이 속도를 줄이는 기술)"를 사용합니다.</div>
+    </div>
+    <div class="rule-card">
+      <div class="rule-icon">🏎️</div>
+      <div class="rule-title">타이어 규정</div>
+      <div class="rule-desc">각 드라이버는 레이스 중 최소 2가지 다른 컴파운드의 타이어를 사용해야 합니다. 피렐리가 공식 타이어 공급업체이며, 소프트(빨강)/미디엄(노랑)/하드(흰색)로 구분됩니다. 비가 오면 인터미디에이트나 웨트 타이어를 사용할 수 있습니다.</div>
+    </div>
+    <div class="rule-card">
+      <div class="rule-icon">🟡</div>
+      <div class="rule-title">세이프티카 & VSC</div>
+      <div class="rule-desc">트랙에 위험 상황이 발생하면 세이프티카(Safety Car)가 출동해 모든 차가 저속으로 따라갑니다. VSC(Virtual Safety Car)는 세이프티카 없이 속도를 제한하는 방식입니다. 이때 피트스톱을 하는 전략이 자주 나옵니다.</div>
+    </div>
+    <div class="rule-card">
+      <div class="rule-icon">🚩</div>
+      <div class="rule-title">페널티 시스템</div>
+      <div class="rule-desc">트랙 위반, 충돌 과실, 불법 오버테이크 등에 따라 5초/10초 타임 페널티 또는 드라이브-스루, 스톱-앤-고 페널티가 부과됩니다. 심각한 위반 시 실격 처리될 수 있습니다.</div>
+    </div>
+  </div>
+
+  <h3 style="font-family:'Rajdhani',sans-serif; font-size:22px; font-weight:700; margin-bottom:24px; color:var(--red);">⚡ 핵심 기술 용어</h3>
+  <div class="tech-grid">
+    <div class="tech-item">
+      <div class="tech-num">01</div>
+      <div class="tech-name">다운포스 (Downforce)</div>
+      <div class="tech-desc">공기역학적 힘으로 차량을 지면으로 누르는 힘입니다. 다운포스가 클수록 코너링 속도가 빨라지지만 직선 속도는 느려집니다. F1 차량은 고속에서 자신의 중량보다 훨씬 큰 다운포스를 생성해, 이론적으로는 터널 천장을 거꾸로 달릴 수도 있습니다. 앞뒤 윙의 각도, 언더플로어 설계로 조절합니다.</div>
+    </div>
+    <div class="tech-item">
+      <div class="tech-num">02</div>
+      <div class="tech-name">DRS (드래그 감소 시스템)</div>
+      <div class="tech-desc">뒤 윙의 플랩을 열어 공기 저항(드래그)을 줄이고 직선 속도를 높이는 시스템입니다. 앞 차와의 간격이 1초 이내일 때만 사용 가능하며, 지정된 DRS 존에서만 작동합니다. 오버테이크를 쉽게 하기 위해 2011년 도입되었습니다.</div>
+    </div>
+    <div class="tech-item">
+      <div class="tech-num">03</div>
+      <div class="tech-name">언더컷 & 오버컷</div>
+      <div class="tech-desc">피트스톱 전략입니다. <strong style="color:var(--text);">언더컷</strong>은 상대보다 먼저 피트인해 새 타이어로 빠른 랩을 타며 앞에 나오는 전략. <strong style="color:var(--text);">오버컷</strong>은 상대가 피트인한 후 타이어가 닳은 상태임에도 트랙에 남아 우위를 유지하는 전략입니다. 피트스톱 시간 자체도 승패를 좌우하며, 현재 최고 피트스톱 기록은 약 1.8초입니다.</div>
+    </div>
+    <div class="tech-item">
+      <div class="tech-num">04</div>
+      <div class="tech-name">그라운드 이펙트 (Ground Effect)</div>
+      <div class="tech-desc">차량 하부의 특수 형상이 공기를 빠르게 통과시키며 차량 아래에 저압 영역을 만들어 차를 지면에 빨아들이는 효과입니다. 1970년대 로터스가 처음 도입했으며, 안전 문제로 금지되었다가 2022년 새 규정으로 부활했습니다. 현재 F1 차량의 다운포스 대부분은 언더플로어에서 발생합니다.</div>
+    </div>
+    <div class="tech-item">
+      <div class="tech-num">05</div>
+      <div class="tech-name">ERS (에너지 회수 시스템)</div>
+      <div class="tech-desc">브레이킹 시 발생하는 열에너지와 배기가스의 에너지를 전기로 변환해 배터리에 저장했다가 가속 시 사용하는 하이브리드 시스템입니다. MGU-K(운동 에너지)와 MGU-H(열 에너지)로 구성되며, 랩당 최대 33초 동안 160마력의 추가 파워를 제공합니다.</div>
+    </div>
+    <div class="tech-item">
+      <div class="tech-num">06</div>
+      <div class="tech-name">타이어 디그레이데이션</div>
+      <div class="tech-desc">타이어가 랩을 거듭할수록 마모되어 성능이 저하되는 현상입니다. 드라이버들은 타이어를 최대한 오래 유지하면서도 빠른 페이스를 유지하는 "타이어 매니지먼트"가 필수입니다. 언제 피트스톱을 하느냐(타이어 전략)가 레이스 결과를 크게 좌우합니다.</div>
+    </div>
+    <div class="tech-item">
+      <div class="tech-num">07</div>
+      <div class="tech-name">슬립스트림 (드래프팅)</div>
+      <div class="tech-desc">앞 차량이 만든 공기의 흐름을 이용해 공기 저항을 줄이고 속도를 높이는 기술입니다. 뒤 차량은 앞 차보다 10~15km/h 빠를 수 있어 오버테이크의 기회가 됩니다. 하지만 동시에 다운포스가 줄어 코너에서 불안정해지는 '더티 에어' 문제도 있습니다.</div>
+    </div>
+    <div class="tech-item">
+      <div class="tech-num">08</div>
+      <div class="tech-name">HALO 시스템</div>
+      <div class="tech-desc">2018년 도입된 드라이버 머리 보호 장치로, 티타늄 소재의 링 형태 구조물입니다. 도입 당시 미적 논란이 있었으나, 2021년 바레인 GP에서 그로장의 차가 반으로 쪼개지는 사고에서 드라이버를 구한 이후 생명의 은인으로 재평가받고 있습니다.</div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- CARS SECTION -->
+<section id="cars" style="max-width:1200px; margin:0 auto; padding:100px 40px;">
+  <div class="section-label">Machine</div>
+  <h2 class="section-title">F1 <em>머신</em>의 모든 것</h2>
+  <p class="section-desc">현대 F1 카는 지구상에서 가장 정교한 이동 수단입니다. 약 15,000개의 부품, 80,000줄 이상의 소프트웨어 코드, 그리고 수백 명의 엔지니어가 만들어낸 첨단 기계입니다.</p>
+
+  <div class="car-specs" style="margin-bottom:48px;">
+    <div class="spec-box">
+      <span class="spec-value">1.6L</span>
+      <span class="spec-unit">V6 터보하이브리드 엔진</span>
+      <div class="spec-name">엔진 배기량</div>
+    </div>
+    <div class="spec-box">
+      <span class="spec-value">1,000+</span>
+      <span class="spec-unit">마력 (hp)</span>
+      <div class="spec-name">최대 출력</div>
+    </div>
+    <div class="spec-box">
+      <span class="spec-value">798kg</span>
+      <span class="spec-unit">최소 중량</span>
+      <div class="spec-name">드라이버 포함</div>
+    </div>
+    <div class="spec-box">
+      <span class="spec-value">372</span>
+      <span class="spec-unit">km/h</span>
+      <div class="spec-name">역대 최고 속도</div>
+    </div>
+    <div class="spec-box">
+      <span class="spec-value">2.6s</span>
+      <span class="spec-unit">0→100km/h</span>
+      <div class="spec-name">가속 시간</div>
+    </div>
+    <div class="spec-box">
+      <span class="spec-value">15,000</span>
+      <span class="spec-unit">RPM</span>
+      <div class="spec-name">최대 엔진 회전수</div>
+    </div>
+    <div class="spec-box">
+      <span class="spec-value">~13M</span>
+      <span class="spec-unit">달러</span>
+      <div class="spec-name">차량 제작 비용</div>
+    </div>
+    <div class="spec-box">
+      <span class="spec-value">6G</span>
+      <span class="spec-unit">측면 G-포스</span>
+      <div class="spec-name">코너링 하중</div>
+    </div>
+  </div>
+
+  <div style="background:var(--bg2); border:1px solid var(--border); padding:32px; margin-bottom:24px;">
+    <h3 style="font-family:'Rajdhani',sans-serif; font-size:20px; font-weight:700; margin-bottom:16px; color:var(--red);">🧠 F1 엔진의 놀라운 사실들</h3>
+    <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(260px, 1fr)); gap:20px;">
+      <div>
+        <div style="font-weight:700; margin-bottom:6px;">피스톤 속도</div>
+        <div style="font-size:13px; color:var(--muted); line-height:1.7;">F1 엔진의 피스톤은 초당 최대 160번 움직입니다. 이는 총알의 속도와 비슷한 수준으로, 일반 엔진 피스톤이 초당 25번 움직이는 것과 비교하면 압도적입니다.</div>
+      </div>
+      <div>
+        <div style="font-weight:700; margin-bottom:6px;">엔진 수명</div>
+        <div style="font-size:13px; color:var(--muted); line-height:1.7;">F1 엔진은 약 7개 레이스 주말(약 7,000km)을 버티도록 설계됩니다. 규정상 드라이버당 시즌 4개 엔진만 사용 가능하며, 초과 시 그리드 페널티를 받습니다.</div>
+      </div>
+      <div>
+        <div style="font-weight:700; margin-bottom:6px;">열 효율</div>
+        <div style="font-size:13px; color:var(--muted); line-height:1.7;">현재 F1 하이브리드 파워 유닛의 열 효율은 50% 이상으로, 일반 자동차 엔진의 30%보다 훨씬 효율적입니다. 이 기술은 미래 자동차 산업에도 적용됩니다.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- CIRCUITS -->
+<section id="circuits" style="max-width:1200px; margin:0 auto; padding:100px 40px;">
+  <div class="section-label">Circuits</div>
+  <h2 class="section-title">전설의 <em>서킷들</em></h2>
+  <p class="section-desc">각기 다른 성격과 역사를 가진 F1 서킷들. 드라이버에 따라 "좋아하는 서킷"이 다르며, 서킷 특성에 따라 강한 팀도 달라집니다.</p>
+
+  <div class="circuit-grid">
+    <div class="circuit-card">
+      <div class="circuit-name">🇲🇨 모나코 GP</div>
+      <div class="circuit-country">Circuit de Monaco · 3.337km</div>
+      <div class="circuit-info">F1에서 가장 유명하고 오래된 서킷. 좁은 시가지를 달리는 극도의 정밀성이 요구되는 코스입니다. 오버테이크가 거의 불가능해 예선 포지션이 결정적입니다. "모나코에서 우승하지 못하면 진짜 챔피언이 아니다"라는 말이 있을 만큼 상징성이 큽니다.</div>
+    </div>
+    <div class="circuit-card">
+      <div class="circuit-name">🇮🇹 모짜 (이탈리아 GP)</div>
+      <div class="circuit-country">Autodromo Nazionale Monza · 5.793km</div>
+      <div class="circuit-info">1922년부터 사용된 "스피드 신전". 세계에서 가장 빠른 F1 서킷으로 평균 속도가 260km/h에 달합니다. 페라리의 홈 서킷이라 "티폴리(Tifosi)"라 불리는 광적인 페라리 팬들로 가득합니다. DRS 존이 많아 오버테이크가 활발합니다.</div>
+    </div>
+    <div class="circuit-card">
+      <div class="circuit-name">🇬🇧 실버스톤 (영국 GP)</div>
+      <div class="circuit-country">Silverstone Circuit · 5.891km</div>
+      <div class="circuit-info">F1의 발상지. 1950년 첫 번째 F1 레이스가 열린 역사적인 서킷입니다. 코플라, 말로우즈, 베케츠 등 고속 코너 구간이 많아 다운포스 설정이 중요합니다. 변덕스러운 영국 날씨로 전략이 복잡해지기도 합니다.</div>
+    </div>
+    <div class="circuit-card">
+      <div class="circuit-name">🇧🇭 바레인 GP</div>
+      <div class="circuit-country">Bahrain International Circuit · 5.412km</div>
+      <div class="circuit-info">F1 개막전이 자주 열리는 서킷으로 야간 레이스로도 유명합니다. 타이어 관리와 브레이킹이 중요하며, 모래 바람 때문에 독특한 트랙 조건이 형성됩니다. 2021년 그로장의 극적인 화재 사고 생존이 일어난 곳입니다.</div>
+    </div>
+    <div class="circuit-card">
+      <div class="circuit-name">🇯🇵 스즈카 (일본 GP)</div>
+      <div class="circuit-country">Suzuka Circuit · 5.807km</div>
+      <div class="circuit-info">드라이버들이 가장 좋아하는 서킷 중 하나. 8자 모양의 독특한 레이아웃과 S-코너, 130R 등 고난이도 섹션이 많습니다. F1 역사상 가장 많은 챔피언십이 결정된 곳이기도 하며, 열정적인 일본 팬들로 유명합니다.</div>
+    </div>
+    <div class="circuit-card">
+      <div class="circuit-name">🇦🇺 멜버른 (호주 GP)</div>
+      <div class="circuit-country">Albert Park Circuit · 5.278km</div>
+      <div class="circuit-info">시즌 개막전으로 자주 개최되는 시가지 서킷. 공원 내 도로를 임시로 만든 서킷으로 빠른 직선과 기술적인 코너가 혼합되어 있습니다. 오버테이크 포인트가 적어 예선 성적이 중요합니다.</div>
+    </div>
+    <div class="circuit-card">
+      <div class="circuit-name">🇸🇦 제다 (사우디 GP)</div>
+      <div class="circuit-country">Jeddah Corniche Circuit · 6.174km</div>
+      <div class="circuit-info">세계에서 가장 빠른 시가지 서킷. 평균 속도 250km/h 이상으로 달리며 가드레일 바로 옆을 스치듯 지나갑니다. 2021년 도입된 신규 서킷으로 극도로 좁고 시야가 제한되어 드라이버들이 가장 위험한 서킷으로 꼽습니다.</div>
+    </div>
+    <div class="circuit-card">
+      <div class="circuit-name">🇺🇸 오스틴 (미국 GP)</div>
+      <div class="circuit-country">Circuit of the Americas · 5.513km</div>
+      <div class="circuit-info">미국의 F1 부활을 이끈 서킷으로 다양한 요소(고속 코너, 헤어핀, 직선)를 모두 갖춘 완성도 높은 코스입니다. 세계 각지의 유명 코너를 참고해 설계되었습니다. 카를로스 사인즈의 홈 팬들이 가장 많은 서킷 중 하나입니다.</div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- WHAT IS F1 / BEGINNER -->
+<section style="max-width:1200px; margin:0 auto; padding:100px 40px;">
+  <div class="section-label">For Beginners</div>
+  <h2 class="section-title">F1에 <em>입문하기</em></h2>
+  <p class="section-desc">F1이 처음이라면? 이것만 알고 시작하세요. 알면 알수록 더 재미있어지는 스포츠입니다.</p>
+
+  <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(300px, 1fr)); gap:20px; margin-bottom:48px;">
+    <div style="background:var(--bg2); border:1px solid var(--border); padding:28px; border-radius:2px;">
+      <div style="font-size:28px; margin-bottom:12px;">🏆</div>
+      <div style="font-family:'Rajdhani',sans-serif; font-size:18px; font-weight:700; margin-bottom:10px;">두 개의 챔피언십</div>
+      <div style="font-size:13px; color:var(--muted); line-height:1.8;">F1에는 드라이버 챔피언십과 컨스트럭터(팀) 챔피언십이 있습니다. 드라이버 챔피언십은 개인 성적, 컨스트럭터는 팀 소속 드라이버 2명의 합산 점수로 결정됩니다. 두 챔피언십 모두 엄청난 명예와 수억 달러의 상금이 걸려 있습니다.</div>
+    </div>
+    <div style="background:var(--bg2); border:1px solid var(--border); padding:28px; border-radius:2px;">
+      <div style="font-size:28px; margin-bottom:12px;">📅</div>
+      <div style="font-family:'Rajdhani',sans-serif; font-size:18px; font-weight:700; margin-bottom:10px;">시즌 구성</div>
+      <div style="font-size:13px; color:var(--muted); line-height:1.8;">F1 시즌은 보통 3월부터 12월까지 진행되며, 전 세계 20여 개 나라에서 레이스가 열립니다. 각 레이스 주말은 목/금 프리 프랙티스 → 토요일 예선(Q1→Q2→Q3) → 일요일 레이스 순서로 진행됩니다. 일부 라운드에서는 토요일 스프린트 레이스도 있습니다.</div>
+    </div>
+    <div style="background:var(--bg2); border:1px solid var(--border); padding:28px; border-radius:2px;">
+      <div style="font-size:28px; margin-bottom:12px;">🎯</div>
+      <div style="font-family:'Rajdhani',sans-serif; font-size:18px; font-weight:700; margin-bottom:10px;">10개 팀, 20명 드라이버</div>
+      <div style="font-size:13px; color:var(--muted); line-height:1.8;">각 시즌에 10개 팀이 참가하며, 각 팀은 2명의 드라이버를 운영합니다. 팀은 차량을 직접 제작하며, 엔진은 메르세데스/페라리/르노/혼다 4개 회사 중 하나에서 공급받습니다. 팀의 순위에 따라 다음 시즌 상금(Prize Money)이 결정됩니다.</div>
+    </div>
+    <div style="background:var(--bg2); border:1px solid var(--border); padding:28px; border-radius:2px;">
+      <div style="font-size:28px; margin-bottom:12px;">📺</div>
+      <div style="font-family:'Rajdhani',sans-serif; font-size:18px; font-weight:700; margin-bottom:10px;">어디서 볼까?</div>
+      <div style="font-size:13px; color:var(--muted); line-height:1.8;">F1은 한국에서 티빙(TVING)을 통해 생중계됩니다. Netflix의 'Drive to Survive' 다큐멘터리로 시작하면 팀들의 관계와 드라마를 이해하기 좋습니다. F1 공식 유튜브 채널에서 하이라이트와 역사적인 레이스들을 무료로 볼 수 있습니다.</div>
+    </div>
+    <div style="background:var(--bg2); border:1px solid var(--border); padding:28px; border-radius:2px;">
+      <div style="font-size:28px; margin-bottom:12px;">🤝</div>
+      <div style="font-family:'Rajdhani',sans-serif; font-size:18px; font-weight:700; margin-bottom:10px;">팀과 라이벌을 선택하세요</div>
+      <div style="font-size:13px; color:var(--muted); line-height:1.8;">F1의 재미는 응원하는 팀과 드라이버가 생기면서 배가됩니다. 페라리(전통과 열정), 메르세데스(기술력), 레드불(젊음과 혁신), 맥라렌(영국의 자존심) 중 마음에 드는 팀을 골라보세요. 라이벌 간의 충돌과 드라마가 F1을 더 흥미롭게 만듭니다.</div>
+    </div>
+    <div style="background:var(--bg2); border:1px solid var(--border); padding:28px; border-radius:2px;">
+      <div style="font-size:28px; margin-bottom:12px;">🎮</div>
+      <div style="font-family:'Rajdhani',sans-serif; font-size:18px; font-weight:700; margin-bottom:10px;">F1 게임으로 체험</div>
+      <div style="font-size:13px; color:var(--muted); line-height:1.8;">Codemasters의 F1 24/25 게임은 F1의 규칙과 서킷을 배우기에 최적입니다. F1 Manager 시리즈는 팀 전략과 경영을 직접 경험해볼 수 있는 게임입니다. EA Sports F1 앱에서 실제 레이스와 연동되는 판타지 F1 리그도 즐길 수 있습니다.</div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">FORMULA 1</div>
+  <p>속도와 기술, 전략과 용기가 만나는 곳.<br>
+  F1은 단순한 레이싱이 아닙니다 — 그것은 인류가 만든 가장 극한의 스포츠입니다.<br><br>
+  <span style="color:#444; font-size:12px;">© 2024 F1 소개 웹사이트 · Made with Claude · 정보는 2024년 기준입니다</span></p>
+</footer>
+
+<script>
+// Speed lines
+const speedLinesEl = document.getElementById('speedLines');
+for(let i=0;i<20;i++){
+  const line = document.createElement('div');
+  line.className = 'speed-line';
+  line.style.cssText = `
+    top: ${Math.random()*100}%;
+    width: ${30+Math.random()*40}%;
+    animation-delay: ${Math.random()*3}s;
+    animation-duration: ${2+Math.random()*2}s;
+    opacity: ${0.3+Math.random()*0.4};
+  `;
+  speedLinesEl.appendChild(line);
+}
+
+// Championship data
+const champData = [
+  {name:'루이스 해밀턴', nat:'🇬🇧', val:7, period:'2008-2020'},
+  {name:'미하엘 슈마허', nat:'🇩🇪', val:7, period:'1994-2004'},
+  {name:'막스 베르스타펜', nat:'🇳🇱', val:4, period:'2021-2024'},
+  {name:'알랭 프로스트', nat:'🇫🇷', val:4, period:'1985-1993'},
+  {name:'세바스티안 베텔', nat:'🇩🇪', val:4, period:'2010-2013'},
+  {name:'후안 마누엘 판지오', nat:'🇦🇷', val:5, period:'1951-1957'},
+  {name:'아일톤 세나', nat:'🇧🇷', val:3, period:'1988-1991'},
+  {name:'니키 라우다', nat:'🇦🇹', val:3, period:'1975-1984'},
+  {name:'넬슨 피케', nat:'🇧🇷', val:3, period:'1981-1987'},
+  {name:'잭 브라밤', nat:'🇦🇺', val:3, period:'1959-1966'},
+  {name:'짐 클라크', nat:'🇬🇧', val:2, period:'1963-1965'},
+  {name:'에머슨 피티팔디', nat:'🇧🇷', val:2, period:'1972-1974'},
+  {name:'미카 해키넨', nat:'🇫🇮', val:2, period:'1998-1999'},
+  {name:'페르난도 알론소', nat:'🇪🇸', val:2, period:'2005-2006'},
+  {name:'그레이엄 힐', nat:'🇬🇧', val:2, period:'1962-1968'},
+  {name:'주세페 파리나', nat:'🇮🇹', val:1, period:'1950'},
+  {name:'나이젤 만셀', nat:'🇬🇧', val:1, period:'1992'},
+  {name:'데이먼 힐', nat:'🇬🇧', val:1, period:'1996'},
+  {name:'미카 해키넨', nat:'🇫🇮', val:2, period:'1998-1999'},
+  {name:'자크 빌뇌브', nat:'🇨🇦', val:1, period:'1997'},
+  {name:'젠슨 버튼', nat:'🇬🇧', val:1, period:'2009'},
+  {name:'키미 라이코넨', nat:'🇫🇮', val:1, period:'2007'},
+  {name:'요헨 린트', nat:'🇦🇹', val:1, period:'1970'},
+  {name:'마리오 안드레티', nat:'🇺🇸', val:1, period:'1978'},
+  {name:'필 힐', nat:'🇺🇸', val:1, period:'1961'},
+];
+
+// Remove duplicates and sort
+const uniqueChamps = champData.filter((v,i,a)=>a.findIndex(t=>(t.name===v.name))===i)
+  .sort((a,b)=>b.val-a.val);
+
+const winsData = [
+  {name:'루이스 해밀턴', nat:'🇬🇧', val:103, period:'2007-현재'},
+  {name:'미하엘 슈마허', nat:'🇩🇪', val:91, period:'1991-2012'},
+  {name:'막스 베르스타펜', nat:'🇳🇱', val:62, period:'2016-현재'},
+  {name:'세바스티안 베텔', nat:'🇩🇪', val:53, period:'2007-2022'},
+  {name:'알랭 프로스트', nat:'🇫🇷', val:51, period:'1980-1993'},
+  {name:'아일톤 세나', nat:'🇧🇷', val:41, period:'1984-1994'},
+  {name:'페르난도 알론소', nat:'🇪🇸', val:32, period:'2003-현재'},
+  {name:'나이젤 만셀', nat:'🇬🇧', val:31, period:'1980-1995'},
+  {name:'후안 마누엘 판지오', nat:'🇦🇷', val:24, period:'1950-1958'},
+  {name:'미카 해키넨', nat:'🇫🇮', val:20, period:'1993-2001'},
+  {name:'키미 라이코넨', nat:'🇫🇮', val:21, period:'2001-2021'},
+  {name:'데이비드 쿨사르', nat:'🇬🇧', val:13, period:'1994-2005'},
+  {name:'짐 클라크', nat:'🇬🇧', val:25, period:'1960-1968'},
+  {name:'니키 라우다', nat:'🇦🇹', val:25, period:'1971-1985'},
+  {name:'카를로스 사인즈', nat:'🇪🇸', val:6, period:'2015-현재'},
+  {name:'샤를 르클레르', nat:'🇲🇨', val:8, period:'2018-현재'},
+  {name:'젠슨 버튼', nat:'🇬🇧', val:15, period:'2000-2016'},
+  {name:'루벤스 바리켈로', nat:'🇧🇷', val:11, period:'1993-2011'},
+  {name:'데이먼 힐', nat:'🇬🇧', val:22, period:'1992-1999'},
+  {name:'에머슨 피티팔디', nat:'🇧🇷', val:14, period:'1970-1980'},
+].sort((a,b)=>b.val-a.val);
+
+const podiumsData = [
+  {name:'루이스 해밀턴', nat:'🇬🇧', val:197, period:'2007-현재'},
+  {name:'미하엘 슈마허', nat:'🇩🇪', val:155, period:'1991-2012'},
+  {name:'세바스티안 베텔', nat:'🇩🇪', val:122, period:'2007-2022'},
+  {name:'막스 베르스타펜', nat:'🇳🇱', val:110, period:'2016-현재'},
+  {name:'알랭 프로스트', nat:'🇫🇷', val:106, period:'1980-1993'},
+  {name:'아일톤 세나', nat:'🇧🇷', val:80, period:'1984-1994'},
+  {name:'페르난도 알론소', nat:'🇪🇸', val:106, period:'2003-현재'},
+  {name:'루벤스 바리켈로', nat:'🇧🇷', val:68, period:'1993-2011'},
+  {name:'데이비드 쿨사르', nat:'🇬🇧', val:37, period:'1994-2005'},
+  {name:'키미 라이코넨', nat:'🇫🇮', val:103, period:'2001-2021'},
+  {name:'나이젤 만셀', nat:'🇬🇧', val:59, period:'1980-1995'},
+  {name:'젠슨 버튼', nat:'🇬🇧', val:50, period:'2000-2016'},
+  {name:'니키 라우다', nat:'🇦🇹', val:54, period:'1971-1985'},
+  {name:'미카 해키넨', nat:'🇫🇮', val:51, period:'1993-2001'},
+  {name:'짐 클라크', nat:'🇬🇧', val:32, period:'1960-1968'},
+].sort((a,b)=>b.val-a.val);
+
+function renderTable(tbodyId, data, colLabel) {
+  const tbody = document.getElementById(tbodyId);
+  const max = data[0].val;
+  tbody.innerHTML = data.map((d,i) => {
+    const rankClass = i===0?'rank-1':i===1?'rank-2':i===2?'rank-3':'rank-other';
+    const pct = Math.round((d.val/max)*100);
+    return `<tr>
+      <td><span class="rank-num ${rankClass}">${i+1}</span></td>
+      <td><strong class="rank-name">${d.name}</strong></td>
+      <td><span class="rank-flag">${d.nat}</span></td>
+      <td><strong style="font-family:'Orbitron',monospace;font-size:16px;">${d.val}</strong></td>
+      <td style="color:var(--muted);font-size:12px;">${d.period}</td>
+      <td class="rank-bar-wrap"><div class="rank-bar" style="width:${pct}%"></div></td>
+    </tr>`;
+  }).join('');
+}
+
+renderTable('champ-tbody', uniqueChamps, '챔피언십');
+renderTable('wins-tbody', winsData, '우승');
+renderTable('podiums-tbody', podiumsData, '포디움');
+
+function showTab(id) {
+  document.querySelectorAll('.tab-content').forEach(el=>el.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(el=>el.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  event.target.classList.add('active');
+}
+
+// Intersection Observer for timeline
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach((entry, i) => {
+    if(entry.isIntersecting) {
+      entry.target.style.animationDelay = (i * 0.1) + 's';
+      entry.target.style.animationPlayState = 'running';
+    }
+  });
+}, { threshold: 0.1 });
+
+document.querySelectorAll('.timeline-item').forEach(el => {
+  el.style.animationPlayState = 'paused';
+  observer.observe(el);
+});
+</script>
+</body>
+</html>
